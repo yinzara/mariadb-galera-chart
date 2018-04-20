@@ -2,7 +2,7 @@
 ## ref: https://hub.docker.com/r/adfinissygroup/k8s-mariadb-galera-centos/tags/
 ##
 ## Default: none
-image: adfinissygroup/k8s-mariadb-galera-centos:v002
+image: adfinissygroup/k8s-mariadb-galera-centos:v004
 
 ## Specify an imagePullPolicy (Required)
 ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -19,6 +19,11 @@ imagePullPolicy: IfNotPresent
 ## Create a database
 # mysqlDatabase:
 
+#generate the mysql secret - set to false on redeploys
+generateSecret: true
+#when secret is generated, do not delete if the chart is deleted
+keepSecret: true
+
 ## Number of pods in the StatefulSet
 replicas: 3
 
@@ -33,6 +38,14 @@ persistence:
   # storageClass:
   accessMode: ReadWriteOnce
   size: 8Gi
+  # if defined as true, adds the "helm.sh/resource-policy":keep annotation to the volumes keeping them from being
+  # deleted if the cluster is deleted
+  keep: false
+
+service:
+  enabled: true
+#  type: ClusterIP
+#  port: 3306
 
 ## Configure MariaDB with a custom my.cnf file
 ## ref: https://mariadb.com/kb/en/mariadb/configuring-mariadb-with-mycnf/#example-of-configuration-file

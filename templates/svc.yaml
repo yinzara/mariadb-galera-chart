@@ -1,18 +1,24 @@
+{{ if .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
-  name: {{ template "dnsname" . }}
+  name: {{ template "mariadb-galera.dnsname" . }}
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "mariadb-fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
+  type: {{ default "ClusterIP" .Values.service.type }}
+  clusterIP: {{ default "None" .Values.service.clusterIP }}
   ports:
   - name: mysql
-    port: 3306
-  clusterIP: None
+{{ if .Values.service.nodePort }}
+    nodePort: {{ .Values.service.nodePort }}
+{{ end }}
+    port: {{ default 3306 .Values.service.port }}
   selector:
-    app: {{ template "fullname" . }}
+    app: {{ template "mariadb-fullname" . }}
+{{ end }}

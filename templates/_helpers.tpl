@@ -2,14 +2,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "name" -}}
+{{- define "mariadb-name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 61 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "fullname" -}}
+{{- define "mariadb-fullname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 61 | trimSuffix "-" -}}
 {{- end -}}
@@ -22,7 +22,7 @@ https://github.com/kubernetes/kubernetes/pull/29523) and the pods in the
 StatefulSet append a dash and a digit (e.g. -0). We also replace "." with "-"
 in Release.Name to avoid issues with invalid DNS names.
 */}}
-{{- define "dnsname" -}}
+{{- define "mariadb-galera.dnsname" -}}
 {{- $name := default "mdb-ga" .Values.dnsnameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | replace "." "-" | lower | trunc 61 | trimSuffix "-" -}}
 {{- end -}}
